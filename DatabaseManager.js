@@ -24,10 +24,26 @@ class DatabaseManager{
         });
     }
 
+    getArticles(){ //TEMPORAIRE PROBLEME DE DURABILITEE
+        return new Promise((resolve, reject)=>{
+            this.connection.query(`SELECT * FROM blog_articles`, (err, res, fld)=>{
+                if (err){
+                    reject(err)
+                } else{
+                    if(res.length != 0){
+                        resolve(res);
+                    } else{
+                        reject('Article not found');
+                    }
+                }
+            });
+        });
+    }
+
     getArticleById(id){
         return new Promise((resolve, reject)=>{
             if(!isNaN(parseInt(id))){
-                this.connection.query(`SELECT * FROM blog_articles WHERE article_id = ${id}`, (err, res, fld)=>{
+                this.connection.query(`SELECT * FROM blog_articles WHERE article_id = ?`, [id], (err, res, fld)=>{
                     if (err){
                         reject(err)
                     } else{
