@@ -4,7 +4,7 @@
         <article>
         <header class="article-header">
             <h1 class="article-title"><%= article.article_title %> </h1>
-            <span class="article-info">Par <span class="username"><%= article.article_user %></span> le <%= article.article_date %>
+            <span class="article-info">Par <span class="username"><%= article.article_user %></span> le <%= article.article_date.toDateString() %>
         </span>
             <span class="views"><%= article.article_views %> vue(s)</span>
         </header>

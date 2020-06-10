@@ -1,9 +1,9 @@
 <%- include('header') %>
     <main class="container">
+        <% if(message){ %> 
+            <div class="status-message" id="<%=message.color %>"><h3><%=message.title %></h3><p><%=message.content %></p></div>
+        <% } %> 
         <div class="form-container">
-            <% if(message){ %> 
-                <div class="status-message" id="${color}"><h3><%=message.title %></h3><p><%=message.content %></p></div>
-            <% } %> 
             <header class="form-header">
                 <h1>Ecrire un post</h1>
             </header>

@@ -36,4 +36,25 @@ app.get("/post/:id", (req, res) => {
     });
 });
 
+app.post("/poster", (req, res)=>{
+
+    let {title, content} = req.body;
+
+    if(title == "" || content == ""){
+        let message = {title: "Oups",content:"Contenu ou titre vide",color:"red"}
+        res.render(path.join(__dirname, "views/upload.ejs"), {message});
+    } else if(content.length > 2000 || title.length >= 100){
+        let message = {title: "Oups",content:"Contenu ou titre trop long.",color:"red"}
+        res.render(path.join(__dirname, "views/upload.ejs"), {message});
+    } else{
+        database.addArticle(title, content, 1).then(m =>{
+            let message = {title: "OK",content:m,color:"green"}
+            res.render(path.join(__dirname, "views/upload.ejs"), {message});
+        }).catch(m=>{
+            let message = {title: "oups",content:m,color:"red"}
+            res.render(path.join(__dirname, "views/upload.ejs"), {message});
+        });
+    }
+});
+
 app.listen(config.app_port);

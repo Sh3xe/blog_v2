@@ -4,12 +4,9 @@
             <article class="article-link">
                 <header class="article-header">
                     <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
-                    <span class="article-info">Par <span class="username"><%=article.article_user%></span> le <%= article.article_date%></span>
+                    <span class="article-info">Par <span class="username"><%=article.article_user%></span> le <%= article.article_date.toDateString() %></span>
                     <span class="views"><%= article.article_views%> vue(s)</span>
                 </header>
-                <main class="article-content">
-                    <%= article.article_content%>
-                </main>
                 </article>
             </article>
         <% } %>
