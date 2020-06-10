@@ -1,0 +1,238 @@
+*{
+    box-sizing: border-box;
+}
+body{
+    margin: 0;
+    font-family: sans-serif;
+    background-color: #f5f5f5;
+}
+
+/*UTILS*/
+#selected{
+    color: white;
+}
+
+#site-logo{
+    margin: 0 20px;
+}
+
+.username{
+    font-weight: bolder;
+}
+
+/*HEADER*/
+
+.site-header{
+    width: 100%;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    background-color: black;
+}
+
+
+.site-header a{
+    text-decoration: none;
+    color: white;
+}
+
+.site-logo{
+    margin: 20px;
+}
+
+.nav-bar{
+    display: flex;
+    align-items: center;
+}
+
+.nav-bar a{
+    color: rgba(255, 255, 255, 0.719);
+    margin: 20px;
+    text-decoration: none;
+}
+
+.nav-bar a:hover{
+    color: white;
+    transition: .3s;
+}
+
+/*MAIN*/
+
+.container{
+    width: 900px;
+    margin: 0 auto;
+}
+
+/*ARTICLES*/
+article{
+    margin-top: 20px;
+    background-color: white;
+    border: black 1px solid;
+    border-radius: 5px;
+    word-wrap: break-word;
+}
+
+.article-header{
+    padding: 10px;
+    background-color: black;
+    color: white;
+}
+
+.article-link a{
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 2em;
+}
+
+.article-title{
+    margin: 0;
+}
+
+.article-info{
+    font-size: 0.9em;
+}
+
+.views{
+    font-size: 0.7em;
+    font-weight: lighter;
+    display: block;
+}
+
+.article-content{
+    padding: 20px;
+}
+
+/*FORM*/
+
+.form-container{
+    width: 80%;
+    margin: 20px auto;
+    background-color: white;
+    border: black 1px solid;
+    border-radius: 5px;
+}
+
+textarea {
+    resize: none;
+}
+
+.form-header{
+    background-color: black;
+    padding: 10px;
+    color: white;
+}
+
+.form-header h1{
+    margin: 0;
+}
+
+.form-container form{
+    padding: 20px;
+}
+
+.upload-form div{
+    margin: 20px 0;
+}
+
+.form-input{
+    padding: 12px 20px;
+    background-color: white;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 4px;
+    font-family: sans-serif;
+    font-size: 1em;
+}
+
+.form-input:hover{
+    background-color: rgba(0, 0, 0, 0.096);
+    transition: .3s;
+}
+
+.article-area textarea,
+.article-area input{
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+#submit{
+    padding: 10px 30px;
+    background-color: black;
+    color: white;
+    border: 0;
+    border-radius: 3px;
+}
+#submit:hover{
+    background-color: rgba(0, 0, 0, 0.856);
+    transition: .2s;
+}
+
+/*STATUS MESSAGE*/
+.status-message{
+    width: 48%;
+    margin: 20px auto;
+    background-color: white;
+    border: black 1px solid;
+    border-radius: 5px;
+}
+
+.status-message h3{
+    margin:0;
+    background-color: black;
+    padding: 10px;
+    color: white;
+}
+
+.status-message p{
+    margin: 20px;
+}
+
+/*Differents colors*/
+
+.status-message#green{
+    color: #a4c968;
+    border-color: #a4c968;
+}
+.status-message#red{
+    color: #c97668;
+    border-color: #c97668;
+}
+
+.status-message#green h3{
+    background-color: #a4c968;
+}
+
+.status-message#red h3{
+    background-color: #c97668;
+}
+
+/*Page controller*/
+.page-buttons{
+    width: 50%;
+    margin: 20px auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+.page-buttons span{
+    font-size: 1.5em;
+}
+
+.page-buttons span::before{
+    content:"Page ";
+}
+
+.page-buttons button{
+    padding: 10px 30px;
+    background-color: black;
+    color: white;
+    border: 0;
+    border-radius: 3px;
+}
+
+/*MEDIA QUERY*/
+@media only screen and (max-width: 900px){
+    .container{
+        width: 100%;
+    }
+}

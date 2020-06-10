@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png"/>
+
+    <title>Poster</title>
+</head>
+<body>
+    <header class="site-header">
+        <a href="/"><h1 class="site-logo">E+Net</h1></a>
+        <nav class="nav-bar">
+            <a href="/">Acceuil</a>
+            <a href="/poster" id="selected">Poster</a>
+        </nav>
+    </header>
+    <main class="container">
+        <div class="form-container">
+            <header class="form-header">
+                <h1>Ecrire un post</h1>
+            </header>
+            <form class="upload-form" action="" method="POST" autocomplete="off" action="/poster">
+                <div class="user-area">
+                    <h3>UTILISATEUR</h3>
+                    <div>
+                        <input class="form-input" name="username" type="text" placeholder="Nom d'utilisateur">
+                    </div>
+                </div>
+                <div class="article-area">
+                    <h3>POST</h3>
+                    <input class="form-input" name="title" type="text" placeholder="Titre">
+                    <textarea class="form-input" name="content" placeholder="Contenu" spellcheck="false"></textarea>
+                </div>
+                <button id="submit" type="submit">Submit</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>
