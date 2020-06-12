@@ -1,14 +1,16 @@
 <%- include('header') %>
     <main class="container">
+        <% if(articles){ %> 
         <% for(let article of articles){%>
+            <% let d = article.article_date %> 
             <article class="article-link">
                 <header class="article-header">
                     <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
-                    <span class="article-info">Par <span class="username"><%=article.article_user%></span> le <%= article.article_date.toDateString() %></span>
+                    <span class="article-info">Par <span class="username"><%=article.article_user%></span> le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%></span>
                     <span class="views"><%= article.article_views%> vue(s)</span>
                 </header>
                 </article>
             </article>
-        <% } %>
+        <% }} %>
     </main>
 <%- include('footer') %>

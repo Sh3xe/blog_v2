@@ -9,6 +9,10 @@ function validatePostForm(title, content){
     return {message: {title: "OK", content:"", color:"green"}, failed:false}
 }
 
+function escapeHtmlTag(string){
+    return string.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 module.exports = {
     validatePostForm
 }

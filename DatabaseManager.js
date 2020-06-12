@@ -80,7 +80,7 @@ class DatabaseManager{
                     if(res.length != 0){
                         resolve(res);
                     } else{
-                        reject('Impossible de trouver cette utilisateur');
+                        reject('Nom d\'utilisateur ou mot de passe incorrect');
                     }
                 }
             });

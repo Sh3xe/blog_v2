@@ -1,11 +1,11 @@
 <%- include('header') %>
     <main class="container">
         <% if(message){ %> 
-            <div class="status-message" id="red"><h3>Oups...</h3><p><%=message%></p></div>
+            <div class="status-message" id=<%= color %>><p><%=message%></p></div>
         <% } %> 
         <div class="form-container">
             <header class="form-header">
-                <h1>Ecrire un post</h1>
+                <h1>Identifiez-vous pour écrire un post</h1>
             </header>
             <form class="upload-form" method="POST" autocomplete="off" action="/login">
                 <div class="user-area">

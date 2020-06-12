@@ -30,7 +30,6 @@ body{
     background-color: black;
 }
 
-
 .site-header a{
     text-decoration: none;
     color: white;
@@ -41,7 +40,9 @@ body{
 }
 
 .nav-bar{
+    width: 95%;
     display: flex;
+    justify-content: space-between;
     align-items: center;
 }
 

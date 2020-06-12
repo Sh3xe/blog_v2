@@ -40,12 +40,18 @@ app.set("view engine", "ejs");
 
 //GET
 app.get("/login", (req, res) => {
-    res.render(path.join(__dirname, "views/login.ejs"), {message:false});
+    database.getUserById(req.session.user_id).then(()=>{
+        res.render(path.join(__dirname, "views/login.ejs"), {message:"Vous êtes identifié!", color:"green"});
+    }).catch(e =>{
+        res.render(path.join(__dirname, "views/login.ejs"), {message:false, color:"red"});
+    });
 });
 
 app.get("/", (req, res) => {
-    database.getArticles(1).then(data=>{
+    database.getArticles().then(data=>{
         res.render(path.join(__dirname, "views/home.ejs"), {articles: data});
+    }).catch(e =>{
+        res.render(path.join(__dirname, "views/home.ejs"), {articles: false});
     });
 });
 
@@ -69,7 +75,7 @@ app.post("/login", (req, res)=>{
         req.session.user_id = user[0].user_id;
         res.redirect("/");
     }).catch(message =>{
-        res.render(path.join(__dirname, "views/login.ejs"), {message});
+        res.render(path.join(__dirname, "views/login.ejs"), {message, color:"red"});
     });
 });
 
