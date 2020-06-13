@@ -34,7 +34,8 @@ class DatabaseManager{
 
     getArticles(){ //TEMPORAIRE PROBLEME DE DURABILITEE
         return new Promise((resolve, reject)=>{
-            this.connection.query(`SELECT * FROM blog_articles`, (err, res, fld)=>{
+            //article_id | article_title | article_content          | article_date        | article_views | article_user | user_id | user_name
+            this.connection.query(`SELECT article_id, article_title, article_content, article_date, article_views, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC`, (err, res, fld)=>{
                 if (err){
                     reject(err)
                 } else{
@@ -51,7 +52,8 @@ class DatabaseManager{
     getArticleById(id){
         return new Promise((resolve, reject)=>{
             if(!isNaN(parseInt(id))){
-                this.connection.query(`SELECT * FROM blog_articles WHERE article_id = ?`, [id], (err, res, fld)=>{
+                //SELECT * FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id;
+                this.connection.query(`SELECT article_id, article_title, article_content, article_date, article_views, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?`, [id], (err, res, fld)=>{
                     if (err){
                         reject(err)
                     } else{
@@ -65,6 +67,22 @@ class DatabaseManager{
             } else{
                 reject("Identifiant de l'article n'est pas un nombre");
             }
+        });
+    }
+
+    getArticleComments(id){
+        return new Promise((resolve, reject)=>{
+            this.connection.query("SELECT comment_content, comment_date, user_name FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id], (err, res, fld)=>{
+                if (err){
+                    reject(err);
+                } else{
+                    if(res.length != 0){
+                        resolve(res);
+                    } else{
+                        reject('Pas de commentaires.');
+                    }
+                }
+            });
         });
     }
 
@@ -104,6 +122,24 @@ class DatabaseManager{
             } else{
                 reject("Mauvaise ID");
             }
+        });
+    }
+
+    //COMMENTS RELATED FUNCTIONS
+
+    addComment(user_id, article_id, comment_content){
+        return new Promise((resolve, reject)=>{
+            this.connection.query("INSERT INTO `blog_comments`(comment_user, comment_article, comment_content) VALUES (?, ?, ?)", [user_id, article_id, comment_content], (err, res, fld)=>{
+                if(err){
+                    reject(err);
+                } else{
+                    if(res.length != 0){
+                        resolve("Commentaire ajouté!");
+                    } else{
+                        reject("Un problème est survenu.");
+                    }
+                }
+            });
         });
     }
 }

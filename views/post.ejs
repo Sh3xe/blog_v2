@@ -5,7 +5,7 @@
         <article>
         <header class="article-header">
             <h1 class="article-title"><%= article.article_title %> </h1>
-            <span class="article-info">Par <span class="username"><%= article.article_user %></span> le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%>
+            <span class="article-info">Par <span class="username"><%= article.user_name %></span> le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>
         </span>
             <span class="views"><%= article.article_views %> vue(s)</span>
         </header>
@@ -14,6 +14,26 @@
             <%= article.article_content %>
         </main>
         </article>
+        <form class="comment-form" method="POST" autocomplete="off" >
+            <div class="user-area">
+                <h3>Poster un commentaire</h3>
+                <div>
+                    <textarea class="form-input" name="content" placeholder="Contenu du commentaire" spellcheck="false"></textarea>
+                </div>
+            <button id="submit" type="submit">Envoyer</button>
+        </form>
+        <% for(let comment of article.comments){ %>
+            <% let cd = comment.comment_date %>
+            <%= article.comment_date %> 
+            <div class="comment">
+                <header class="comment-header">
+                    Par <%= comment.user_name %> le <%=` ${cd.getDate()}/${cd.getMonth()}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
+                </header>
+                <main class="comment-content">
+                    <p><%= comment.comment_content %> </p>
+                </main>
+            </div>
+        <% } %> 
     </main>
 <% } else{%> 
     <div class="status-message" id="red"><h3>Erreur</h3><p><%= error %></p></div>

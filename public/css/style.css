@@ -103,6 +103,20 @@ article{
 .article-content{
     padding: 20px;
 }
+/*COMMENT*/
+
+.comment{
+    width: 100%;
+    background-color: white;
+    border: 1px black solid;
+    border-radius: 3px;
+    margin: 1em 0;
+}
+
+.comment-header{
+    color: white;
+    background-color: black;
+}
 
 /*FORM*/
 
@@ -136,6 +150,11 @@ textarea {
     margin: 20px 0;
 }
 
+.comment-form textarea{
+    width: 60%;
+    margin: 10px auto;
+}
+
 .form-input{
     padding: 12px 20px;
     background-color: white;
@@ -150,8 +169,8 @@ textarea {
     transition: .3s;
 }
 
-.article-area textarea,
-.article-area input{
+textarea,
+input{
     width: 90%;
     margin-bottom: 20px;
 }
@@ -234,6 +253,9 @@ textarea {
 /*MEDIA QUERY*/
 @media only screen and (max-width: 900px){
     .container{
+        width: 100%;
+    }
+    .form-container{
         width: 100%;
     }
 }

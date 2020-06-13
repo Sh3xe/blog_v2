@@ -62,13 +62,27 @@ app.get("/poster", loginRequired, (req, res) => {
 app.get("/post/:id", (req, res) => {
     database.getArticleById(req.params.id).then(data=>{
         database.addView(req.params.id);
-        res.render(path.join(__dirname, "views/post.ejs"), {article: data[0], error: false});
+        data[0].comments = "";
+        database.getArticleComments(req.params.id).then(d =>{
+            data[0].comments = d;
+            res.render(path.join(__dirname, "views/post.ejs"), {article: data[0], error: false});
+        }).catch(e =>{
+            res.render(path.join(__dirname, "views/post.ejs"), {error: false});
+        });
     }).catch(e =>{
         res.render(path.join(__dirname, "views/post.ejs"), {error: e});
     });
 });
 
 //POST
+app.post("/post/:id", loginRequired, (req, res)=>{
+    database.addComment(req.session.user_id, req.params.id,req.body.content).then( m =>{
+        res.redirect("/post/" + req.params.id);
+    }).catch(e =>{
+        res.render(path.join(__dirname, "views/post.ejs"), {article: [], error: e});
+    });
+});
+
 app.post("/login", (req, res)=>{
     let {username, password} = req.body;
     database.getUser(username, password).then((user)=>{
@@ -85,7 +99,7 @@ app.post("/poster", loginRequired, (req, res)=>{
     let redirection_page = path.join(__dirname, "views/upload.ejs"); // will be used multiple times
 
     if (!failed){
-        database.addArticle(title, content, 1).then(m =>{
+        database.addArticle(title, content, req.session.user_id).then(m =>{
             message.content = m;
             res.render(redirection_page, {message});
         }).catch(m=>{
