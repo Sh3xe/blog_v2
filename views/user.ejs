@@ -1,0 +1,21 @@
+<%- include('header') %>
+    <main class="container">
+        <% if(user){ %>
+            <% let d = user.registration_date %>
+            <header class="article-header">
+                <span class="article-info">Utilisateur: <span class="username"><%=user.user_name%></span> arivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%></span>
+            </header> 
+        <% if(user_articles){ %> 
+        <% for(let article of user_articles){%>
+            <% let d = article.article_date %>
+            <article class="article-link">
+                <header class="article-header">
+                    <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
+                    <span class="article-info">Par <span class="username"><%=article.user_name%></span> le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%></span>
+                    <span class="views"><%= article.article_views%> vue(s)</span>
+                </header>
+                </article>
+            </article>
+        <% }} %>
+    </main>
+<%- include('footer') %>

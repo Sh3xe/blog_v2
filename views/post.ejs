@@ -5,9 +5,8 @@
         <article>
         <header class="article-header">
             <h1 class="article-title"><%= article.article_title %> </h1>
-            <span class="article-info">Par <span class="username"><%= article.user_name %></span> le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>
+            <span class="article-info">Par <span class="username"><%= article.user_name %></span> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>
         </span>
-            <span class="views"><%= article.article_views %> vue(s)</span>
         </header>
         <main class="article-content">
             <img src=<%= article.article_image %>>

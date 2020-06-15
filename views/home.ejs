@@ -6,8 +6,7 @@
             <article class="article-link">
                 <header class="article-header">
                     <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
-                    <span class="article-info">Par <span class="username"><%=article.user_name%></span> le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%></span>
-                    <span class="views"><%= article.article_views%> vue(s)</span>
+                    <span class="article-info">Par <span class="username"><%=article.user_name%></span> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%>
                 </header>
                 </article>
             </article>
