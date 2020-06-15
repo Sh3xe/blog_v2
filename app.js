@@ -31,7 +31,7 @@ app.use(router);
 // 404 PAGE
 app.use((req, res, next)=>{
     res.status(404);
-    res.render(views.not_found, {url:req.url});
+    res.render(__dirname + "/views/404.ejs", {url:req.url});
 });
 
 //LISTEN

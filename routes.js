@@ -11,7 +11,7 @@ let views = { //will be used multiple times
     login    : __dirname +"/views/login.ejs",
     post     : __dirname +"/views/post.ejs",
     upload   : __dirname +"/views/upload.ejs",
-    not_found: __dirname +"/views/404.ejs"
+    user     : __dirname +"/views/user.ejs"
 };
 
 function loginRequired(req, res, next){
@@ -61,7 +61,17 @@ router.get("/post/:id", (req, res) => {
     });
 });
 
-
+router.get("/user/:id", (req, res)=>{
+    database.getUserById(req.params.id).then(user_data=>{
+        database.getUserArticles(req.params.id).then((article_data)=>{
+            res.render(views.user, {user:user_data, articles: article_data});
+        }).catch(() =>{
+            res.render(views.user, {user:user_data, articles: false});
+        });
+    }).catch(()=>{
+        res.render(views.user, {user:false, articles: false});
+    });
+});
 
 //POST
 router.post("/post/:id", loginRequired, (req, res)=>{

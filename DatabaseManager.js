@@ -41,7 +41,7 @@ class DatabaseManager{
 
     getArticles(){ //TEMPORAIRE PROBLEME DE DURABILITEE
         return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT article_id, article_title, article_content, article_date, article_views, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC", (err, res, fld)=>{
+            this.connection.query("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC", (err, res, fld)=>{
                 if (err) reject(err)
                 if(!res.length) reject("Pas de post trouvé :/");
                 else resolve(res);
@@ -51,7 +51,7 @@ class DatabaseManager{
 
     getArticleById(id){
         return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT article_id, article_title, article_content, article_date, article_views, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?", [id], (err, res, fld)=>{
+            this.connection.query("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?", [id], (err, res, fld)=>{
                 if (err) reject(err);
                 if (!res.length) reject("Impossible de trouver cette article");
                 else resolve(res);
@@ -61,9 +61,19 @@ class DatabaseManager{
 
     getArticleComments(id){
         return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT comment_content, comment_date, user_name FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id], (err, res, fld)=>{
+            this.connection.query("SELECT comment_content, comment_date, user_name, user_id FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id], (err, res, fld)=>{
                 if (err) reject(err);
                 if(!res.length) reject('Pas de commentaires.');
+                else resolve(res);
+            });
+        });
+    }
+
+    getUserArticles(user_id){
+        return new Promise((resolve, reject)=>{
+            this.connection.query("SELECT article_id, article_title, article_content, article_date, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_user = ?;", [user_id], (err, res, fld)=>{
+                if (err) reject(err);
+                if(!res.length) reject('Utilisateur non trouvé');
                 else resolve(res);
             });
         });
@@ -82,7 +92,7 @@ class DatabaseManager{
 
     getUserById(user_id){
         return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id], (err, res, fld)=>{
+            this.connection.query("SELECT user_bio, user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id], (err, res, fld)=>{
                 if (err) reject(err)
                 if(!res.length) reject("Impossible de trouver cette utilisateur");
                 else resolve(res);

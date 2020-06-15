@@ -16,8 +16,15 @@ body{
     margin: 0 20px;
 }
 
+.article-info .username,
 .username{
     font-weight: bolder;
+    font-size: 1em;
+    display: inline;
+}
+
+a{
+    color: white;
 }
 
 /*HEADER*/

@@ -5,11 +5,10 @@
         <article>
         <header class="article-header">
             <h1 class="article-title"><%= article.article_title %> </h1>
-            <span class="article-info">Par <span class="username"><%= article.user_name %></span> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>
+            <span class="article-info">Par <a  href=<%= "/user/" + article.user_id %> class="username"><%= article.user_name %></a> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>
         </span>
         </header>
         <main class="article-content">
-            <img src=<%= article.article_image %>>
             <%= article.article_content %>
         </main>
         </article>
@@ -26,7 +25,7 @@
             <%= article.comment_date %> 
             <div class="comment">
                 <header class="comment-header">
-                    Par <%= comment.user_name %> le <%=` ${cd.getDate()}/${cd.getMonth()}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
+                    Par <a href=<%= "/user/" + comment.user_id %>> <%= comment.user_name %></a> le <%=` ${cd.getDate()}/${cd.getMonth()}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
                 </header>
                 <main class="comment-content">
                     <p><%= comment.comment_content %> </p>
