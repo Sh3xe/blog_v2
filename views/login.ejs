@@ -1,21 +1,21 @@
 <%- include('header') %>
-    <main class="container">
-        <% if(message){ %> 
-            <div class="status-message" id=<%= color %>><p><%=message%></p></div>
-        <% } %> 
-        <div class="form-container">
-            <header class="form-header">
-                <h1>Identifiez-vous pour écrire un post</h1>
-            </header>
-            <form class="upload-form" method="POST" autocomplete="off" action="/login">
-                <div class="user-area">
-                    <h3>S'IDENTIFIER</h3>
-                    <div>
-                        <input class="form-input" name="username" type="text" placeholder="Nom d'utilisateur">
-                        <input class="form-input" name="password" type="password" placeholder="Mot de passe">
-                    </div>
-                <button id="submit" type="submit">Login</button>
-            </form>
-        </div>
-    </main>
+<main class="container">
+    <% if(message){ %> 
+        <div class="status-message" id=<%= color %>><p><%=message%></p></div>
+    <% } %> 
+    <div class="form-container">
+        <header class="form-header">
+            <h1>Identifiez-vous pour écrire un post</h1>
+        </header>
+        <form class="upload-form" method="POST" autocomplete="off" action="/login">
+            <div class="user-area">
+                <h3>S'IDENTIFIER</h3>
+                <div>
+                    <input class="form-input" name="username" type="text" placeholder="Nom d'utilisateur">
+                    <input class="form-input" name="password" type="password" placeholder="Mot de passe">
+                </div>
+            <button id="submit" type="submit">Login</button>
+        </form>
+    </div>
+</main>
 <%- include('footer') %>

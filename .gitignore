@@ -3,3 +3,4 @@ node_modules
 package.json
 package-lock.json
 db_test.js
+cookie_test.js

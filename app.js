@@ -4,7 +4,13 @@
 const express = require("express");
 const app = express();
 const sessions = require("client-sessions");
+const cookieParser = require("cookie-parser");
+const http = require("http");
+const server = http.createServer(app);
 
+const io = require("socket.io")(server);
+const {ChatApp} = require("./chat_app.js");
+const chat_app = new ChatApp(io);
 
 //Hold sensitive / config information
 const config = require("./config.js");
@@ -12,10 +18,12 @@ const config = require("./config.js");
 //Router files
 const router = require("./routes.js");
 
+
 //Init middlewares
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cookieParser());
 app.use(sessions({ // cookie init
     cookieName: "session",
     secret: config.secret_key,
@@ -35,4 +43,4 @@ app.use((req, res, next)=>{
 });
 
 //LISTEN
-app.listen(config.app_port);
+server.listen(config.app_port, ()=> console.log("listening for connections"));

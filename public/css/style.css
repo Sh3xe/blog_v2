@@ -6,29 +6,34 @@ body{
     font-family: sans-serif;
     background-color: #f5f5f5;
 }
-
 /*UTILS*/
 #selected{
     color: white;
 }
-
 #site-logo{
     margin: 0 20px;
 }
-
+hr{
+    height: 4px;
+    background-color: black;
+    border-radius: 2px;
+}
+.user-bio{
+    background-color: white;
+    color: black;
+    border-radius: 2px;
+    margin: 5px;
+}
 .article-info .username,
 .username{
     font-weight: bolder;
     font-size: 1em;
     display: inline;
 }
-
 a{
     color: white;
 }
-
 /*HEADER*/
-
 .site-header{
     width: 100%;
     height: 60px;
@@ -36,41 +41,33 @@ a{
     align-items: center;
     background-color: black;
 }
-
 .site-header a{
     text-decoration: none;
     color: white;
 }
-
 .site-logo{
     margin: 20px;
 }
-
 .nav-bar{
     width: 95%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .nav-bar a{
     color: rgba(255, 255, 255, 0.719);
     margin: 20px;
     text-decoration: none;
 }
-
 .nav-bar a:hover{
     color: white;
     transition: .3s;
 }
-
 /*MAIN*/
-
 .container{
     width: 900px;
     margin: 0 auto;
 }
-
 /*ARTICLES*/
 article{
     margin-top: 20px;
@@ -79,39 +76,32 @@ article{
     border-radius: 5px;
     word-wrap: break-word;
 }
-
 .article-header{
     padding: 10px;
     background-color: black;
     color: white;
 }
-
 .article-link a{
     display: block;
     color: white;
     text-decoration: none;
     font-size: 2em;
 }
-
 .article-title{
     margin: 0;
 }
-
 .article-info{
     font-size: 0.9em;
 }
-
 .views{
     font-size: 0.7em;
     font-weight: lighter;
     display: block;
 }
-
 .article-content{
     padding: 20px;
 }
 /*COMMENT*/
-
 .comment{
     width: 100%;
     background-color: white;
@@ -119,14 +109,15 @@ article{
     border-radius: 3px;
     margin: 1em 0;
 }
-
 .comment-header{
+    padding: 5px;
     color: white;
     background-color: black;
 }
-
+.comment-content{
+    padding: 0 10px;
+}
 /*FORM*/
-
 .form-container{
     width: 80%;
     margin: 20px auto;
@@ -255,6 +246,51 @@ input{
     color: white;
     border: 0;
     border-radius: 3px;
+}
+/*CHAT APPLICATION*/
+.chat-app{
+    display: flex;
+}
+
+.chat-aside{
+    width: 300px;
+    flex:none;
+    background-color: black;
+    color: white;
+}
+
+.message{
+    margin: 5px 0;
+    border: solid 1px black;
+}
+
+.msg-head{
+    background: black;
+    color: white;
+}
+
+.chat-container{
+    width: 100%;
+    margin: 0;
+}
+
+.chat-messages{
+    height: 500px;
+    word-wrap: break-word;
+    overflow-y: scroll;
+}
+
+.chat-form{
+    display: flex;
+    justify-content: space-between;
+}
+
+.chat-form button{
+    flex: none;
+}
+
+.chat-form input{
+    width: 100%;
 }
 
 /*MEDIA QUERY*/

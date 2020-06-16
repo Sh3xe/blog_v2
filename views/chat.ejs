@@ -1,0 +1,17 @@
+<%- include('header') %>
+<main class="container">
+    <div class="chat-app">
+        <aside class="chat-aside">
+            <h1>Connected:</h1>
+        </aside>
+        <div class="chat-container">
+            <div class="chat-messages"></div>
+            <form action="/" method="post" class="chat-form">
+                <input type="text"><button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </div>
+</main>
+<script src="socket.io/socket.io.js"></script>
+<script src="js/client.js"></script>
+<%- include('footer') %>

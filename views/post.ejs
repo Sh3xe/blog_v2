@@ -6,12 +6,13 @@
         <header class="article-header">
             <h1 class="article-title"><%= article.article_title %> </h1>
             <span class="article-info">Par <a  href=<%= "/user/" + article.user_id %> class="username"><%= article.user_name %></a> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>
-        </span>
+            </span>
         </header>
         <main class="article-content">
             <%= article.article_content %>
         </main>
-        </article>
+    </article>
+    <hr>
         <form class="comment-form" method="POST" autocomplete="off" >
             <div class="user-area">
                 <h3>Poster un commentaire</h3>
@@ -25,7 +26,7 @@
             <%= article.comment_date %> 
             <div class="comment">
                 <header class="comment-header">
-                    Par <a href=<%= "/user/" + comment.user_id %>> <%= comment.user_name %></a> le <%=` ${cd.getDate()}/${cd.getMonth()}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
+                    Par <a href=<%= "/user/" + comment.user_id %>> <%= comment.user_name %></a> le <%=` ${cd.getDate()}/${cd.getMonth()+1}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
                 </header>
                 <main class="comment-content">
                     <p><%= comment.comment_content %> </p>

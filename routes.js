@@ -11,7 +11,8 @@ let views = { //will be used multiple times
     login    : __dirname +"/views/login.ejs",
     post     : __dirname +"/views/post.ejs",
     upload   : __dirname +"/views/upload.ejs",
-    user     : __dirname +"/views/user.ejs"
+    user     : __dirname +"/views/user.ejs",
+    chat     : __dirname +"/views/chat.ejs"
 };
 
 function loginRequired(req, res, next){
@@ -45,6 +46,16 @@ router.get("/poster", loginRequired, (req, res) => {
     res.render(views.upload, {message: false});
 });
 
+router.get("/chat", loginRequired, (req, res)=>{
+    database.getUserById(req.session.user_id).then((user)=>{
+        let chat_key = utils.generateChatKey(user[0].user_name, req.session.user_id);
+        res.cookie("chat-key", chat_key);
+        res.render(views.chat);
+    }).catch(e=>{
+        res.send("problème de serveur " + e);
+    });
+});
+
 router.get("/post/:id", (req, res) => {
     database.getArticleById(req.params.id).then(data=>{
         // by default the comments under the post will be an empty array
@@ -75,7 +86,8 @@ router.get("/user/:id", (req, res)=>{
 
 //POST
 router.post("/post/:id", loginRequired, (req, res)=>{
-    database.addComment(req.session.user_id, req.params.id,req.body.content).then( m =>{
+    let content = utils.escapeHtmlTag(req.body.content);
+    database.addComment(req.session.user_id, req.params.id, content).then( m =>{
         res.redirect("/post/" + req.params.id);
     }).catch(e =>{
         res.render(views.post, {article: [], error: e});
@@ -97,6 +109,8 @@ router.post("/poster", loginRequired, (req, res)=>{
     let {title, content} = req.body;
     //we validate the form and get the message that will be displayed
     let {message, failed} = utils.validatePostForm(title, content);
+
+    content = utils.escapeHtmlTag(req.body.content);
 
     if (!failed){
         database.addArticle(title, content, req.session.user_id).then(m =>{
