@@ -20,5 +20,5 @@ msg_form.addEventListener("submit", e=>{
 
 socket.on("chat_message", (msg)=>{
     msg_container.innerHTML += createMessage(msg);
-    console.log(msg);
+    msg_container.scrollTop = msg_container.scrollHeight;
 });

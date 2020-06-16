@@ -26,7 +26,6 @@ class DatabaseManager{
                 if(error) reject(error);
                 connection.query(command, value_array, (err, res, fld)=>{
                     if (err) reject(err);
-                    if(!res.length)reject("Aucun résultat.");
                     else resolve(res);
                     connection.release();
                 });

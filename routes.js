@@ -86,8 +86,7 @@ router.get("/user/:id", (req, res)=>{
 
 //POST
 router.post("/post/:id", loginRequired, (req, res)=>{
-    let content = utils.escapeHtmlTag(req.body.content);
-    database.addComment(req.session.user_id, req.params.id, content).then( m =>{
+    database.addComment(req.session.user_id, req.params.id, req.body.content).then( m =>{
         res.redirect("/post/" + req.params.id);
     }).catch(e =>{
         res.render(views.post, {article: [], error: e});
@@ -110,11 +109,9 @@ router.post("/poster", loginRequired, (req, res)=>{
     //we validate the form and get the message that will be displayed
     let {message, failed} = utils.validatePostForm(title, content);
 
-    content = utils.escapeHtmlTag(req.body.content);
-
     if (!failed){
-        database.addArticle(title, content, req.session.user_id).then(m =>{
-            message.content = m;
+        database.addArticle(title, req.body.content, req.session.user_id).then(m =>{
+            message.content = "Article ajouté!";
             res.render(views.upload, {message});
         }).catch(m=>{
             message = {title: "oups",content:m,color:"red"};
