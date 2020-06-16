@@ -1,25 +1,38 @@
 <%- include('header') %>
-    <main class="container">
-        <% if(user){ %>
-            <% let d = user[0].registration_date %>
+<header class="site-header">
+    <a href="/"><h1 class="site-logo">E+Net</h1></a>
+    <nav class="nav-bar">
+        <span>
+            <a href="/">Acceuil</a>
+            <a href="/chat">Salon</a>
+            <a href="/poster">Poster</a>
+        </span>
+        <span>
+            <a href="/login">Login</a>
+        </span>
+    </nav>
+</header>
+<main class="container">
+    <% if(user){ %>
+        <% let d = user[0].registration_date %>
+        <header class="article-header">
+            <span class="article-info">Utilisateur: <span class="username"><%=user[0].user_name%></span> arrivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h{d.getMinutes()}`%></span>
+            <div class="user-bio"><%= user[0].user_bio %> </div>
+        </header> 
+        <hr>
+    <% }if(articles){ %> 
+    <% for(let article of articles){%>
+        <% let d = article.article_date %>
+        <article class="article-link">
             <header class="article-header">
-                <span class="article-info">Utilisateur: <span class="username"><%=user[0].user_name%></span> arrivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%></span>
-                <div class="user-bio"><%= user[0].user_bio %> </div>
-            </header> 
-            <hr>
-        <% }if(articles){ %> 
-        <% for(let article of articles){%>
-            <% let d = article.article_date %>
-            <article class="article-link">
-                <header class="article-header">
-                    <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
-                    <span class="article-info">Par <span class="username"><%=article.user_name%></span> le <%=` ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%></span>
-                </header>
-                <main class="article-content">
-                    <%= article.article_content %>
-                </main>
-                </article>
+                <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
+                <span class="article-info">Par <span class="username"><%=article.user_name%></span> le <%=` ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%></span>
+            </header>
+            <main class="article-content">
+                <%= article.article_content %>
+            </main>
             </article>
-        <% }} %>
-    </main>
+        </article>
+    <% }} %>
+</main>
 <%- include('footer') %>

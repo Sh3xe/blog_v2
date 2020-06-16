@@ -1,0 +1,20 @@
+{
+  "name": "blog_v3",
+  "version": "1.0.0",
+  "description": "Un blog simple, avec la possibilité de mettre en ligne des posts, et de lire ceux des autres.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon app"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "client-sessions": "^0.8.0",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "mysql": "^2.18.1",
+    "socket.io": "^2.3.0"
+  }
+}

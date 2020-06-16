@@ -1,4 +1,17 @@
 <%- include('header') %>
+<header class="site-header">
+    <a href="/"><h1 class="site-logo">E+Net</h1></a>
+    <nav class="nav-bar">
+        <span>
+            <a href="/" id="selected">Acceuil</a>
+            <a href="/chat">Salon</a>
+            <a href="/poster">Poster</a>
+        </span>
+        <span>
+            <a href="/login">Login</a>
+        </span>
+    </nav>
+</header>
 <% if(!error){ %> 
     <% let d = article.article_date %> 
     <main class="container">

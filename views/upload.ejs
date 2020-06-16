@@ -1,17 +1,30 @@
 <%- include('header') %>
-    <main class="container">
-        <% if(message){ %> 
-            <div class="status-message" id="<%=message.color %>"><h3><%=message.title %></h3><p><%=message.content %></p></div>
-        <% } %> 
-        <div class="form-container">
-            <header class="form-header">
-                <h1>Ecrire un post</h1>
-            </header>
-            <form class="upload-form" method="POST" autocomplete="off" action="/poster">
-                    <input class="form-input" name="title" type="text" placeholder="Titre">
-                    <textarea class="form-input" name="content" placeholder="Contenu" spellcheck="false"></textarea>
-                <button id="submit" type="submit">Submit</button>
-            </form>
-        </div>
-    </main>
+<header class="site-header">
+    <a href="/"><h1 class="site-logo">E+Net</h1></a>
+    <nav class="nav-bar">
+        <span>
+            <a href="/">Acceuil</a>
+            <a href="/chat">Salon</a>
+            <a href="/poster" id="selected">Poster</a>
+        </span>
+        <span>
+            <a href="/login">Login</a>
+        </span>
+    </nav>
+</header>
+<main class="container">
+    <% if(message){ %> 
+        <div class="status-message" id="<%=message.color %>"><h3><%=message.title %></h3><p><%=message.content %></p></div>
+    <% } %> 
+    <div class="form-container">
+        <header class="form-header">
+            <h1>Ecrire un post</h1>
+        </header>
+        <form class="upload-form" method="POST" autocomplete="off" action="/poster">
+                <input class="form-input" name="title" type="text" placeholder="Titre">
+                <textarea class="form-input" name="content" placeholder="Contenu" spellcheck="false"></textarea>
+            <button id="submit" type="submit">Submit</button>
+        </form>
+    </div>
+</main>
 <%- include('footer') %>

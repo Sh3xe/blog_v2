@@ -3,101 +3,71 @@
 const mysql = require("mysql");
 const crypto = require("crypto");
 const config = require("./config.js");
+const { connect } = require("http2");
 
 
 class DatabaseManager{
     constructor(host, user, password, database){
         //Connection à la base de donnée
-        this.connection = mysql.createConnection({
-            host     : host,
-            user     : user,
-            password : password,
-            database : database
+        this.pool = mysql.createPool({
+            connectionLimit : 10,
+            host            : host,
+            user            : user,
+            password        : password,
+            database        : database
         });
-        this.connection.connect();
     }
 
+    //Template function
+
+    sendDBRequest(command, value_array){
+        return new Promise((resolve, reject)=>{
+            this.pool.getConnection((error, connection)=>{
+                if(error) reject(error);
+                connection.query(command, value_array, (err, res, fld)=>{
+                    if (err) reject(err);
+                    if(!res.length)reject("Aucun résultat.");
+                    else resolve(res);
+                    connection.release();
+                });
+            });
+        });
+    }
+
+    //CRUD
     // CREATE
-
     addArticle(title, content, user_id){
-        return new Promise((resolve, reject)=>{
-            this.connection.query("INSERT INTO `blog_articles` (`article_title`, `article_content`, `article_user`) VALUES (?, ?, ?)", [title, content, user_id], (err, res, fld)=>{
-                if(err) reject(err);
-                resolve("Ajouté!");
-            });
-        });
+        return this.sendDBRequest("INSERT INTO `blog_articles` (`article_title`, `article_content`, `article_user`) VALUES (?, ?, ?)", [title, content, user_id]);
     }
-
     addComment(user_id, article_id, comment_content){
-        return new Promise((resolve, reject)=>{
-            this.connection.query("INSERT INTO `blog_comments`(comment_user, comment_article, comment_content) VALUES (?, ?, ?)", [user_id, article_id, comment_content], (err, res, fld)=>{
-                if(err) reject(err);
-                resolve("Commentaire ajouté!");
-            });
-        });
+        return this.sendDBRequest("INSERT INTO `blog_comments`(comment_user, comment_article, comment_content) VALUES (?, ?, ?)", [user_id, article_id, comment_content]);
     }
 
     //READ
 
     getArticles(){ //TEMPORAIRE PROBLEME DE DURABILITEE
-        return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC", (err, res, fld)=>{
-                if (err) reject(err)
-                if(!res.length) reject("Pas de post trouvé :/");
-                else resolve(res);
-            });
-        });
+        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC", []);      
     }
 
     getArticleById(id){
-        return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?", [id], (err, res, fld)=>{
-                if (err) reject(err);
-                if (!res.length) reject("Impossible de trouver cette article");
-                else resolve(res);
-            });
-        });
+        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?",  [id]);
     }
 
     getArticleComments(id){
-        return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT comment_content, comment_date, user_name, user_id FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id], (err, res, fld)=>{
-                if (err) reject(err);
-                if(!res.length) reject('Pas de commentaires.');
-                else resolve(res);
-            });
-        });
+        return this.sendDBRequest("SELECT comment_content, comment_date, user_name, user_id FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id]);
     }
 
     getUserArticles(user_id){
-        return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT article_id, article_title, article_content, article_date, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_user = ?;", [user_id], (err, res, fld)=>{
-                if (err) reject(err);
-                if(!res.length) reject('Utilisateur non trouvé');
-                else resolve(res);
-            });
-        });
+        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_user = ?;", [user_id]);
     }
 
     getUser(username ,password){
         let hashed_psw = crypto.createHash('sha384').update(password).digest('hex');
-        return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT user_id FROM blog_users WHERE user_name = ? AND user_password = ?", [username, hashed_psw], (err, res, fld)=>{
-                if (err) reject(err);
-                if(!res.length) reject('Nom d\'utilisateur ou mot de passe incorrect');
-                else resolve(res);
-            });
-        });
+        return this.sendDBRequest("SELECT user_id FROM blog_users WHERE user_name = ? AND user_password = ?", [username, hashed_psw]);
     }
 
     getUserById(user_id){
-        return new Promise((resolve, reject)=>{
-            this.connection.query("SELECT user_bio, user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id], (err, res, fld)=>{
-                if (err) reject(err)
-                if(!res.length) reject("Impossible de trouver cette utilisateur");
-                else resolve(res);
-            });
-        });
+        return this.sendDBRequest("SELECT user_bio, user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id]);
     }
 }
 
