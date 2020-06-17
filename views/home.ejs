@@ -19,7 +19,7 @@
         <article class="article-link">
             <header class="article-header">
                 <a href=<%= '/post/' + article.article_id %>> <%=article.article_title%></a>
-                <span class="article-info">Par <a  href=<%= "/user/" + article.user_id %> class="username"><%= article.user_name %></a> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%>
+                <span class="article-info">Par <a  href=<%= "/user/" + article.user_id %> class="username"><%= article.user_name %></a> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()+1}/${d.getFullYear()}, ${d.getHours()}h${d.getMinutes()}`%>, <%= article.article_views %> vue(s).
             </header>
             </article>
         </article>
@@ -28,5 +28,6 @@
 <div class="page-buttons">
     <button id="last">Page précédente</button> <button id="next">Page suivante</button>
 </div>
-<script src="/js/home_page.js"></script>
+<script>let last=document.getElementById("last");let next=document.getElementById("next");let container=document.querySelector(".container");const urlParams=new URLSearchParams(window.location.search);let curr_start=parseInt(urlParams.get("start"))||0;next.addEventListener("click",e=>{e.preventDefault();if(container.childElementCount==8){curr_start+=8;window.location.replace(`${window.location.pathname }?start=${ curr_start }`)}});last.addEventListener("click",e=>{e.preventDefault();if(curr_start>=8){curr_start-=8;window.location.replace(`${window.location.pathname }?start=${ curr_start }`)}});if(container.childElementCount==0){if(curr_start>=8){curr_start-=8;window.location.replace(`${window.location.pathname }?start=${ curr_start }`)}}</script>
+<!--<script src="/js/home_page.js"></script>-->
 <%- include('footer') %>

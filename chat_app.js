@@ -24,6 +24,7 @@ class ChatApp {
             
             socket.on("chat_message", (msg)=> {
                 if(msg.trim().length){
+                    msg = utils.escapeHtmlTag(msg).substring(0,300);
                     this.updateMessageList({content: msg, user:socket.user_name, user_id: socket.user_id});
                     this.emitMessage(msg, socket.user_name, socket.user_id);
                 }
@@ -53,8 +54,7 @@ class ChatApp {
     }
 
     emitMessage(msg, user_name, user_id) {
-        const content = utils.escapeHtmlTag(msg).substring(0,300);
-        const message = {content: content, user: user_name,  user_id: user_id};
+        const message = {content: msg, user: user_name,  user_id: user_id};
         this.emitToSockets("chat_message", message);
     }
 

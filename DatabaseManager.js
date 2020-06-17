@@ -56,16 +56,20 @@ class DatabaseManager{
 
     //READ
 
+    getCommentById(id){
+        return this.sendDBRequest("SELECT * FROM blog_comments WHERE comment_id = ?",  [id]);
+    }
+
     getArticles(start){
-        return this.sendPreparedRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC LIMIT ?, 8", [start]);      
+        return this.sendPreparedRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC LIMIT ?, 8", [start]);
     }
 
     getArticleById(id){
         return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?",  [id]);
     }
 
-    getArticleComments(id){
-        return this.sendDBRequest("SELECT comment_content, comment_date, user_name, user_id, comment_id FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id]);
+    getArticleComments(id, start){
+        return this.sendDBRequest("SELECT comment_content, comment_date, user_name, user_id, comment_id, comment_article FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ? ORDER BY comment_date DESC LIMIT ?, 6", [id, start]);
     }
 
     getUserArticles(user_id){
@@ -84,6 +88,19 @@ class DatabaseManager{
     //UPDATE
     updateBioOf(user_bio, user_id){
         return this.sendDBRequest("UPDATE blog_users SET user_bio = ? WHERE user_id = ?", [user_bio, user_id]);
+    }
+
+    addView(id){
+        return this.sendPreparedRequest("UPDATE blog_articles SET article_views = article_views + 1 WHERE article_id = ?", [id]);
+    }
+
+    //DELETE
+    deleteComment(id){
+        return this.sendDBRequest("DELETE FROM blog_comments WHERE comment_id = ?", [id]);
+    }
+
+    deleteArticle(id){
+        return this.sendDBRequest("DELETE FROM blog_articles WHERE article_id = ?", [id]);
     }
 }
 

@@ -9,7 +9,7 @@ const http = require("http");
 const server = http.createServer(app);
 
 const io = require("socket.io")(server);
-const {ChatApp} = require("./chat_app.js");
+const {ChatApp} = require("./Chat_app.js");
 const chat_app = new ChatApp(io);
 
 //Hold sensitive / config information

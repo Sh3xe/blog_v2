@@ -34,7 +34,7 @@ function loginRequired(req, res, next){
 router.get("/", (req, res) => {
     let start = 0
     if(req.query.start){
-        start = req.query.start;
+        start = parseInt(req.query.start);
     }
 
     database.getArticles(start).then(data=>{
@@ -68,16 +68,22 @@ router.get("/chat", loginRequired, (req, res)=>{
 });
 
 router.get("/post/:id", (req, res) => {
-    database.getArticleById(req.params.id).then(data=>{
-        if(data.length){
+    let start = 0
+    if(req.query.start){
+        start = parseInt(req.query.start);
+    }
+
+    database.addView(req.params.id);
+    database.getArticleById(req.params.id).then(article=>{
+        if(article.length){
             // by default the comments under the post will be an empty array
-            data[0].comments = [];
+            article[0].comments = [];
             //we fetch the post's comments
-            database.getArticleComments(req.params.id).then(d =>{
-                data[0].comments = d;
-                res.render(views.post, {article: data[0], error: false, user_id: req.session.user_id});
+            database.getArticleComments(req.params.id, start).then(comments =>{
+                article[0].comments = comments;
+                res.render(views.post, {article: article[0], error: false, user_id: req.session.user_id});
             }).catch(e =>{
-                res.render(views.post, {article: data[0], error: false, user_id: req.session.user_id});
+                res.render(views.post, {article: article[0], error: false, user_id: req.session.user_id});
             });
         } else res.render(views.post, {error: "Aucun article trouvé"});
     }).catch(e =>{
@@ -112,7 +118,6 @@ router.post("/dashboard", loginRequired, (req, res)=>{
     database.updateBioOf(bio, req.session.user_id).then(()=>{
         res.redirect("/dashboard");
     }).catch(e=>{
-        console.log(e);
         res.render(views.dashboard, {user:false, error: "Impossible de mettre à jour la bio"});
     });
 });
@@ -150,5 +155,29 @@ router.post("/poster", loginRequired, (req, res)=>{
     }
 });
 
+//"DELETE"
+router.post("/post/:post_id/delete_comment/:id", loginRequired, (req, res)=>{
+    database.getCommentById(req.params.id).then(comment=>{
+        if(comment[0].comment_user == req.session.user_id) database.deleteComment(comment[0].comment_id).then(()=>{
+            res.redirect(`/post/${req.params.post_id}`);
+        }).catch(e=>{
+            res.redirect(`/post/${req.params.post_id}`);
+        });
+    }).catch(e=>{
+            res.redirect(`/post/${req.params.post_id}`);
+    });
+});
+
+router.post("/post/delete/:id", loginRequired, (req, res)=>{
+    database.getArticleById(req.params.id).then(article=>{
+        if(article[0].user_id == req.session.user_id) database.deleteArticle(article[0].article_id).then(()=>{
+            res.redirect("/");
+        }).catch(e=>{
+            res.redirect(`/post/${req.params.id}`);
+        });
+    }).catch(e=>{
+        res.redirect(`/post/${req.params.id}`);
+    });
+});
 
 module.exports = router;
