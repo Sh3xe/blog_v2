@@ -12,7 +12,8 @@ let views = { //will be used multiple times
     post     : __dirname +"/views/post.ejs",
     upload   : __dirname +"/views/upload.ejs",
     user     : __dirname +"/views/user.ejs",
-    chat     : __dirname +"/views/chat.ejs"
+    chat     : __dirname +"/views/chat.ejs",
+    dashboard: __dirname +"/views/dashboard.ejs"
 };
 
 function loginRequired(req, res, next){
@@ -42,10 +43,18 @@ router.get("/", (req, res) => {
 
 router.get("/login", (req, res) => {
     database.getUserById(req.session.user_id).then((user)=>{
-        if(user.length) res.render(views.login, {message:"Vous êtes identifié!", color:"green"});
+        if(user.length) res.render(views.login, {message:"Vous êtes identifié!, <a href=\"/dashboard\">Paramètres</a>", color:"green"});
         else res.render(views.login, {message:false, color:"red"});
     }).catch(e =>{
         res.render(views.login, {message:false, color:"red"});
+    });
+});
+
+router.get("/dashboard", loginRequired, (req, res)=>{
+    database.getUserById(req.session.user_id).then(user=>{
+        res.render(views.dashboard, {user: user, error: false});
+    }).catch(e=>{
+        res.redirect("/login");
     });
 });
 
@@ -104,6 +113,16 @@ router.post("/post/:id", loginRequired, (req, res)=>{
         res.redirect("/post/" + req.params.id);
     }).catch(e =>{
         res.redirect(views.login);
+    });
+});
+
+router.post("/dashboard", loginRequired, (req, res)=>{
+    let bio = req.body.bio_content;
+    database.updateBioOf(bio, req.session.user_id).then(()=>{
+        res.redirect("/dashboard");
+    }).catch(e=>{
+        console.log(e);
+        res.render(views.dashboard, {user:false, error: "Impossible de mettre à jour la bio"});
     });
 });
 

@@ -80,6 +80,11 @@ class DatabaseManager{
     getUserById(user_id){
         return this.sendDBRequest("SELECT user_bio, user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id]);
     }
+
+    //UPDATE
+    updateBioOf(user_bio, user_id){
+        return this.sendDBRequest("UPDATE blog_users SET user_bio = ? WHERE user_id = ?", [user_bio, user_id]);
+    }
 }
 
 let database = new DatabaseManager(config.db_host, config.db_user, config.db_password, config.db_database);

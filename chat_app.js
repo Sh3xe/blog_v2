@@ -32,6 +32,7 @@ class ChatApp {
             socket.on("disconnect", ()=> {
                 this.socket_list = this.socket_list.filter(function(el) { return el != socket; });
                 this.emitToSockets("server_message", `${socket.user_name} has disconnected`);
+                this.updateUserList();
             });
         });
     }

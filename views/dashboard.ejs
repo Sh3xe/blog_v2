@@ -1,0 +1,29 @@
+<%- include('header') %>
+<header class="site-header">
+    <a href="/"><h1 class="site-logo">E+Net</h1></a>
+    <nav class="nav-bar">
+        <span>
+            <a href="/">Accueil</a>
+            <a href="/chat">Salon</a>
+            <a href="/poster">Poster</a>
+        </span>
+        <span>
+            <a href="/login">Login</a>
+        </span>
+    </nav>
+</header>
+<main class="container">
+    <% if(!error){ %> 
+        <% let d = user[0].registration_date %>
+        <header class="article-header">
+            <span class="article-info">Utilisateur: <span class="username"><%=user[0].user_name%></span> arrivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%></span>
+            <div class="user-bio"><%= user[0].user_bio %> </div>
+        </header> 
+        <form action="/dashboard" method="post">
+            <textarea name="bio_content" class="form-input bio-form" spellcheck="false" autofocus placeholder="Votre bio"></textarea>
+            <button id="submit" type="submit">Mettre à jour votre Bio</button>
+        </form>
+    <% } %> 
+</main>
+<script src="/js/dashboard.js"></script>
+<%- include('footer') %>
