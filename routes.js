@@ -16,8 +16,9 @@ let views = { //will be used multiple times
 };
 
 function loginRequired(req, res, next){
-    database.getUserById(req.session.user_id).then(()=>{
-        next();
+    database.getUserById(req.session.user_id).then((user)=>{
+        if(user.length) next();
+        else res.redirect("/login");
     }).catch(() =>{
         res.redirect("/login");
     });
@@ -102,7 +103,7 @@ router.post("/post/:id", loginRequired, (req, res)=>{
     database.addComment(req.session.user_id, req.params.id, req.body.content).then( m =>{
         res.redirect("/post/" + req.params.id);
     }).catch(e =>{
-        res.render(views.post, {article: [], error: e});
+        res.redirect(views.login);
     });
 });
 

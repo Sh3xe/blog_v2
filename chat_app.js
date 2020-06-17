@@ -3,9 +3,6 @@
 const utils = require("./utils.js");
 const fs = require("fs");
 
-// THIS CODE IS HORRIBLE AND WILL BE REWRITTEN
-
-
 class ChatApp {
     constructor(io_obj) {
         this.io = io_obj;
@@ -39,15 +36,15 @@ class ChatApp {
         });
     }
 
-    emitToSockets(message, content){
-        for(let socket of this.socket_list){
+    emitToSockets(message, content) {
+        for(let socket of this.socket_list) {
             socket.emit(message, content);
         }
     }
 
     updateUserList(){
         let users = [];
-        for(let socket of this.socket_list){
+        for(let socket of this.socket_list) {
             users.push({name: socket.user_name, id:socket.user_id});
         }
 
@@ -60,6 +57,7 @@ class ChatApp {
         this.emitToSockets("chat_message", message);
     }
 
+    
     findUser(key) {
         const users = JSON.parse(fs.readFileSync("chat_pending.json"));
         for(let user of users){
@@ -70,7 +68,7 @@ class ChatApp {
         return false;
     }
 
-    updateMessageList(msg){
+    updateMessageList(msg) {
         this.messages_list.push(msg);
         if(this.messages_list.length > 30) this.messages_list.shift();
     }

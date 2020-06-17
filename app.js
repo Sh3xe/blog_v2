@@ -42,4 +42,4 @@ app.use((req, res, next)=>{
 });
 
 //LISTEN
-server.listen(config.app_port, ()=> console.log("listening for connections"));
+server.listen(config.app_port, ()=> console.log(`Server started on port: ${config.app_port}`));
