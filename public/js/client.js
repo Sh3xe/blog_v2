@@ -43,6 +43,6 @@ socket.on("message_list", (messages)=>{
 socket.on("user_list_update", (users)=>{
     chat_aside.innerHTML ="";
     for(let user of users){
-        chat_aside.innerHTML += `<li><a href=${user.id}>${user.name}</a></li>`;
+        chat_aside.innerHTML += `<li><a href=/user/${user.id}>${user.name}</a></li>`;
     }
 });

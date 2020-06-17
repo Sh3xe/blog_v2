@@ -27,7 +27,12 @@ function loginRequired(req, res, next){
 
 //GET
 router.get("/", (req, res) => {
-    database.getArticles().then(data=>{
+    let start = 0
+    if(req.query.start){
+        start = req.query.start;
+    }
+
+    database.getArticles(start).then(data=>{
         res.render(views.home, {articles: data});
     }).catch(e =>{
         res.render(views.home, {articles: false});
@@ -35,8 +40,9 @@ router.get("/", (req, res) => {
 });
 
 router.get("/login", (req, res) => {
-    database.getUserById(req.session.user_id).then(()=>{
-        res.render(views.login, {message:"Vous êtes identifié!", color:"green"});
+    database.getUserById(req.session.user_id).then((user)=>{
+        if(user.length) res.render(views.login, {message:"Vous êtes identifié!", color:"green"});
+        else res.render(views.login, {message:false, color:"red"});
     }).catch(e =>{
         res.render(views.login, {message:false, color:"red"});
     });
@@ -48,9 +54,13 @@ router.get("/poster", loginRequired, (req, res) => {
 
 router.get("/chat", loginRequired, (req, res)=>{
     database.getUserById(req.session.user_id).then((user)=>{
-        let chat_key = utils.generateChatKey(user[0].user_name, req.session.user_id);
-        res.cookie("chat-key", chat_key);
-        res.render(views.chat);
+        if(user.length) {
+            let chat_key = utils.generateChatKey(user[0].user_name, req.session.user_id);
+            res.cookie("chat-key", chat_key);
+            res.render(views.chat);
+        } else{
+            res.redirect("/login");
+        }
     }).catch(e=>{
         res.send("problème de serveur " + e);
     });
@@ -58,15 +68,17 @@ router.get("/chat", loginRequired, (req, res)=>{
 
 router.get("/post/:id", (req, res) => {
     database.getArticleById(req.params.id).then(data=>{
-        // by default the comments under the post will be an empty array
-        data[0].comments = [];
-        //we fetch the post's comments
-        database.getArticleComments(req.params.id).then(d =>{
-            data[0].comments = d;
-            res.render(views.post, {article: data[0], error: false});
-        }).catch(e =>{
-            res.render(views.post, {article: data[0], error: false});
-        });
+        if(data.length){
+            // by default the comments under the post will be an empty array
+            data[0].comments = [];
+            //we fetch the post's comments
+            database.getArticleComments(req.params.id).then(d =>{
+                data[0].comments = d;
+                res.render(views.post, {article: data[0], error: false});
+            }).catch(e =>{
+                res.render(views.post, {article: data[0], error: false});
+            });
+        } else res.render(views.post, {error: "Aucun article trouvé"});
     }).catch(e =>{
         res.render(views.post, {error: e});
     });
@@ -75,7 +87,8 @@ router.get("/post/:id", (req, res) => {
 router.get("/user/:id", (req, res)=>{
     database.getUserById(req.params.id).then(user_data=>{
         database.getUserArticles(req.params.id).then((article_data)=>{
-            res.render(views.user, {user:user_data, articles: article_data});
+            if(article_data.length) res.render(views.user, {user:user_data, articles: article_data});
+            else res.render(views.user, {user:false, articles: false});
         }).catch(() =>{
             res.render(views.user, {user:user_data, articles: false});
         });
@@ -96,8 +109,12 @@ router.post("/post/:id", loginRequired, (req, res)=>{
 router.post("/login", (req, res)=>{
     let {username, password} = req.body;
     database.getUser(username, password).then((user)=>{
-        req.session.user_id = user[0].user_id;
-        res.redirect("/");
+        if (user.length){
+            req.session.user_id = user[0].user_id;
+            res.redirect("/");
+        } else{
+            res.render(views.login, {message:"Mauvais nom ou mot de passe", color:"red"});
+        }
     }).catch(message =>{
         res.render(views.upload, {message, color:"red"});
     });

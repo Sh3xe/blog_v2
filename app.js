@@ -18,7 +18,6 @@ const config = require("./config.js");
 //Router files
 const router = require("./routes.js");
 
-
 //Init middlewares
 app.use(express.static(__dirname + "/public"));
 app.use(express.json());

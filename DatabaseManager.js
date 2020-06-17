@@ -1,9 +1,8 @@
 "use strict";
 
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const crypto = require("crypto");
 const config = require("./config.js");
-const { connect } = require("http2");
 
 
 class DatabaseManager{
@@ -33,6 +32,19 @@ class DatabaseManager{
         });
     }
 
+    sendPreparedRequest(command, value_array){
+        return new Promise((resolve, reject)=>{
+            this.pool.getConnection((error, connection)=>{
+                if(error) reject(error);
+                connection.execute(command, value_array, (err, res, fld)=>{
+                    if (err) reject(err);
+                    else resolve(res);
+                    connection.release();
+                });
+            });
+        });
+    }
+
     //CRUD
     // CREATE
     addArticle(title, content, user_id){
@@ -44,8 +56,8 @@ class DatabaseManager{
 
     //READ
 
-    getArticles(){ //TEMPORAIRE PROBLEME DE DURABILITEE
-        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC", []);      
+    getArticles(start){
+        return this.sendPreparedRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id ORDER BY article_date DESC LIMIT ?, 8", [start]);      
     }
 
     getArticleById(id){
