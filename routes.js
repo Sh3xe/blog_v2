@@ -18,7 +18,10 @@ let views = { //will be used multiple times
 
 function loginRequired(req, res, next){
     database.getUserById(req.session.user_id).then((user)=>{
-        if(user.length) next();
+        if(user.length){
+            req.user = user[0];
+            next();
+        }
         else res.redirect("/login");
     }).catch(() =>{
         res.redirect("/login");
@@ -51,11 +54,7 @@ router.get("/login", (req, res) => {
 });
 
 router.get("/dashboard", loginRequired, (req, res)=>{
-    database.getUserById(req.session.user_id).then(user=>{
-        res.render(views.dashboard, {user: user, error: false});
-    }).catch(e=>{
-        res.redirect("/login");
-    });
+    res.render(views.dashboard, {user: req.user, error: false});
 });
 
 router.get("/poster", loginRequired, (req, res) => {
@@ -63,17 +62,9 @@ router.get("/poster", loginRequired, (req, res) => {
 });
 
 router.get("/chat", loginRequired, (req, res)=>{
-    database.getUserById(req.session.user_id).then((user)=>{
-        if(user.length) {
-            let chat_key = utils.generateChatKey(user[0].user_name, req.session.user_id);
-            res.cookie("chat-key", chat_key);
-            res.render(views.chat);
-        } else{
-            res.redirect("/login");
-        }
-    }).catch(e=>{
-        res.send("problème de serveur " + e);
-    });
+    let chat_key = utils.generateChatKey(req.user.user_name, req.session.user_id);
+    res.cookie("chat-key", chat_key);
+    res.render(views.chat);
 });
 
 router.get("/post/:id", (req, res) => {
@@ -84,9 +75,9 @@ router.get("/post/:id", (req, res) => {
             //we fetch the post's comments
             database.getArticleComments(req.params.id).then(d =>{
                 data[0].comments = d;
-                res.render(views.post, {article: data[0], error: false});
+                res.render(views.post, {article: data[0], error: false, user_id: req.session.user_id});
             }).catch(e =>{
-                res.render(views.post, {article: data[0], error: false});
+                res.render(views.post, {article: data[0], error: false, user_id: req.session.user_id});
             });
         } else res.render(views.post, {error: "Aucun article trouvé"});
     }).catch(e =>{
@@ -158,5 +149,6 @@ router.post("/poster", loginRequired, (req, res)=>{
         res.render(views.upload, {message});
     }
 });
+
 
 module.exports = router;

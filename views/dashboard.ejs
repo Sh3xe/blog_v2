@@ -14,10 +14,10 @@
 </header>
 <main class="container">
     <% if(!error){ %> 
-        <% let d = user[0].registration_date %>
+        <% let d = user.registration_date %>
         <header class="article-header">
-            <span class="article-info">Utilisateur: <span class="username"><%=user[0].user_name%></span> arrivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%></span>
-            <div class="user-bio"><%= user[0].user_bio %> </div>
+            <span class="article-info">Utilisateur: <span class="username"><%=user.user_name%></span> arrivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%></span>
+            <div class="user-bio"><%= user.user_bio %> </div>
         </header> 
         <form action="/dashboard" method="post">
             <textarea name="bio_content" class="form-input bio-form" spellcheck="false" autofocus placeholder="Votre bio"></textarea>

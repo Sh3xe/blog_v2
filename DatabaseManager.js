@@ -65,7 +65,7 @@ class DatabaseManager{
     }
 
     getArticleComments(id){
-        return this.sendDBRequest("SELECT comment_content, comment_date, user_name, user_id FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id]);
+        return this.sendDBRequest("SELECT comment_content, comment_date, user_name, user_id, comment_id FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ?", [id]);
     }
 
     getUserArticles(user_id){

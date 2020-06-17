@@ -42,12 +42,12 @@
                     Par <a href=<%= "/user/" + comment.user_id %>> <%= comment.user_name %></a> le <%=` ${cd.getDate()}/${cd.getMonth()+1}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
                 </header>
                 <main class="comment-content">
-                    <p><%= comment.comment_content %> </p>
+                    <p><%= comment.comment_content %></p>
                 </main>
             </div>
         <% } %> 
     </main>
-<% } else{%> 
+<% } else{%>
     <div class="status-message" id="red"><h3>Erreur</h3><p><%= error %></p></div>
-<% }%> 
+<% }%>
 <%- include('footer') %>
