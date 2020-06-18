@@ -72,8 +72,8 @@ class DatabaseManager{
         return this.sendDBRequest("SELECT comment_content, comment_date, user_name, user_id, comment_id, comment_article FROM blog_comments LEFT JOIN blog_users ON blog_comments.comment_user = blog_users.user_id WHERE comment_article = ? ORDER BY comment_date DESC LIMIT ?, 6", [id, start]);
     }
 
-    getUserArticles(user_id){
-        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_user = ?;", [user_id]);
+    getUserArticles(user_id, start){
+        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, user_name FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_user = ? ORDER BY article_date DESC LIMIT ?, 6;", [user_id, start]);
     }
 
     getUser(username ,password){
@@ -82,7 +82,7 @@ class DatabaseManager{
     }
 
     getUserById(user_id){
-        return this.sendDBRequest("SELECT user_bio, user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id]);
+        return this.sendPreparedRequest("SELECT user_bio, user_name, registration_date FROM blog_users WHERE user_id = ?", [user_id]);
     }
 
     //UPDATE

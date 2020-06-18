@@ -17,7 +17,7 @@
         <% let d = user.registration_date %>
         <header class="article-header">
             <span class="article-info">Utilisateur: <span class="username"><%=user.user_name%></span> arrivé(e) le <%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%></span>
-            <div class="user-bio"><%= user.user_bio %> </div>
+            <div class="user-bio"><%- user.user_bio %> </div>
         </header> 
         <form action="/dashboard" method="post">
             <textarea name="bio_content" class="form-input bio-form" spellcheck="false" autofocus placeholder="Votre bio"></textarea>

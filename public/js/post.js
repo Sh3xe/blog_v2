@@ -6,7 +6,6 @@ const urlParams = new URLSearchParams(window.location.search);
 let curr_start = parseInt(urlParams.get("start")) || 0;
 
 next.addEventListener("click", e=>{
-    console.log("next");
     e.preventDefault();
     if(container.childElementCount == 6){
         curr_start += 6;
@@ -15,7 +14,6 @@ next.addEventListener("click", e=>{
 });
 
 last.addEventListener("click", e=>{
-    console.log("last");
     e.preventDefault();
     if(curr_start >= 6 ){
         curr_start -= 6;

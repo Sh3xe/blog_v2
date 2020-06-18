@@ -13,16 +13,16 @@ class ChatApp {
             const key = utils.getKeyFromCookie(socket.handshake.headers['cookie']);
             const user = this.findUser(key);
             if (user){
-                socket.user_id   = user.id;
+                socket.user_id = user.id;
                 socket.user_name = user.name;
                 this.socket_list.push(socket);
-
                 socket.emit("message_list", this.messages_list);
                 this.emitToSockets("server_message", `${socket.user_name} has connected`);
                 this.updateUserList();
             }
-            
+
             socket.on("chat_message", (msg)=> {
+                console.log(msg);
                 if(msg.trim().length){
                     msg = utils.escapeHtmlTag(msg).substring(0,300);
                     this.updateMessageList({content: msg, user:socket.user_name, user_id: socket.user_id});
