@@ -93,18 +93,18 @@ router.get("/user/:id", (req, res)=>{
 
 //POST
 router.post("/post/:id", loginRequired, (req, res)=>{
-    database.addComment(req.session.user_id, req.params.id, req.body.content).then(() =>{
+    let content = utils.parseMessage(req.body.content);
+    database.addComment(req.session.user_id, req.params.id,content).then(() =>{
         res.redirect("/post/" + req.params.id);
     }).catch(() => res.redirect(views.login));
 });
 
 router.post("/dashboard", loginRequired, (req, res)=>{
-    let bio = utils.escapeHtmlTag(req.body.bio_content);
-    bio = bio.replace(/\\n/g, "<br>");
+    let bio = utils.parseMessage(req.body.bio_content);
 
     database.updateBioOf(bio, req.session.user_id).then(()=>{
         res.redirect("/dashboard");
-    }).catch(() => res.render(views.dashboard, {user:false, error: "Impossible de mettre à jour la bio"}));
+    }).catch(() => res.render(views.dashboard, {user: false, error: "Impossible de mettre à jour la bio"}));
 });
 
 router.post("/login", (req, res)=>{
@@ -123,10 +123,11 @@ router.post("/login", (req, res)=>{
 
 router.post("/poster", loginRequired, (req, res)=>{
     let {title, content} = req.body;
+    content = utils.parseMessage(content);
     let {message, failed} = utils.validatePostForm(title, content);
 
     if (!failed){
-        database.addArticle(title, req.body.content, req.session.user_id).then(m =>{
+        database.addArticle(title, content, req.session.user_id).then(m =>{
             message.content = "Article ajouté!";
             res.render(views.upload, {message});
         }).catch(m=>{

@@ -22,7 +22,7 @@
             </span>
         </header>
         <main class="article-content">
-            <%= article.article_content %>
+            <%- article.article_content %>
         </main>
         <% if(user_id == article.user_id){ %> 
             <form method="post" action=<%= `/post/delete/${article.article_id}/` %> >
@@ -51,7 +51,7 @@
                         Par <a href=<%= "/user/" + comment.user_id %>> <%= comment.user_name %></a> le <%=` ${cd.getDate()}/${cd.getMonth()+1}/${cd.getFullYear()}, à ${cd.getHours()}h${cd.getMinutes()}`%>
                     </header>
                     <main class="comment-content">
-                        <p><%= comment.comment_content %></p>
+                        <p><%- comment.comment_content %></p>
                     </main>
                     <% if(comment.user_id == user_id){ %> 
                         <form method="post" action=<%= `/post/${comment.comment_article}/delete_comment/${comment.comment_id}` %> >

@@ -44,9 +44,18 @@ function getKeyFromCookie(string){
     return false;
 }
 
+function parseMessage(message){
+    message = ` ${message} `; //Helps with the regExp
+    message = message.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+    message = message.replace(/[^\/](BIG)/g, "<strong>").replace(/\/BIG/g, "</strong>");
+    message = message.replace(/[^\/](ITALIC)/g, "<i>").replace(/\/ITALIC/g, "</i>");
+    return message;
+}
+
 module.exports = {
     validatePostForm,
     escapeHtmlTag,
     generateChatKey,
-    getKeyFromCookie
+    getKeyFromCookie,
+    parseMessage
 }
