@@ -22,9 +22,8 @@ class ChatApp {
             }
 
             socket.on("chat_message", (msg)=> {
-                console.log(msg);
                 if(msg.trim().length){
-                    msg = utils.escapeHtmlTag(msg).substring(0,300);
+                    msg = utils.parseMessage(msg).substring(0,300);
                     this.updateMessageList({content: msg, user:socket.user_name, user_id: socket.user_id});
                     this.emitMessage(msg, socket.user_name, socket.user_id);
                 }

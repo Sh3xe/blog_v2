@@ -3,6 +3,7 @@
 const mysql = require("mysql2");
 const crypto = require("crypto");
 const config = require("./config.js");
+const fs = require("fs");
 
 
 class DatabaseManager{
@@ -47,9 +48,10 @@ class DatabaseManager{
 
     //CRUD
     // CREATE
-    addArticle(title, content, user_id){
-        return this.sendDBRequest("INSERT INTO `blog_articles` (`article_title`, `article_content`, `article_user`) VALUES (?, ?, ?)", [title, content, user_id]);
+    addArticle(title, content, user_id, image_path){
+        return this.sendDBRequest("INSERT INTO `blog_articles` (`article_title`, `article_content`, `article_user`, `article_image`) VALUES (?, ?, ?, ?)", [title, content, user_id, image_path]);
     }
+
     addComment(user_id, article_id, comment_content){
         return this.sendDBRequest("INSERT INTO `blog_comments`(comment_user, comment_article, comment_content) VALUES (?, ?, ?)", [user_id, article_id, comment_content]);
     }
@@ -65,7 +67,7 @@ class DatabaseManager{
     }
 
     getArticleById(id){
-        return this.sendDBRequest("SELECT article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?",  [id]);
+        return this.sendDBRequest("SELECT article_image, article_id, article_title, article_content, article_date, article_views, user_name, user_id FROM blog_articles LEFT JOIN blog_users ON blog_articles.article_user = blog_users.user_id WHERE article_id = ?",  [id]);
     }
 
     getArticleComments(id, start){
@@ -99,8 +101,21 @@ class DatabaseManager{
         return this.sendDBRequest("DELETE FROM blog_comments WHERE comment_id = ?", [id]);
     }
 
-    deleteArticle(id){
-        return this.sendDBRequest("DELETE FROM blog_articles WHERE article_id = ?", [id]);
+    deleteArticle(id, image){
+        return new Promise((resolve, reject)=>{
+            fs.unlink(`${__dirname}/public/uploads/${image}`, (e)=>{});
+            this.pool.getConnection((error, connection)=>{
+                if(error) reject(error);
+                connection.query("DELETE FROM blog_comments WHERE comment_article = ?", [id], (err, res, fld)=>{
+                    if (err) reject(err);
+                    else connection.query("DELETE FROM blog_articles WHERE article_id = ?", [id], (err, res, fld)=>{
+                        if (err) reject(err);
+                        else resolve();
+                    });
+                    connection.release();
+                });
+            });
+        });
     }
 }
 

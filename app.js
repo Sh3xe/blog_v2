@@ -6,6 +6,7 @@ const app = express();
 const sessions = require("client-sessions");
 const cookieParser = require("cookie-parser");
 const server = require("http").createServer(app);
+
 const io = require("socket.io")(server);
 const {ChatApp} = require("./ChatApp.js");
 const chat_app = new ChatApp(io);
@@ -24,9 +25,8 @@ app.use(cookieParser());
 app.use(sessions({ // cookie init
     cookieName: "session",
     secret: config.secret_key,
-    duration: 5 * 60 * 1000,
-    ephemeral: true,
-    httpOnly: true
+    duration: 10 * 60 * 1000,
+    ephemeral: true
 }));
 
 //Init view engine

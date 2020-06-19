@@ -1,4 +1,14 @@
-<%- include('header') %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png"/>
+
+    <title>ECO + NETWORKING SERVICE</title>
+</head>
+<body>
 <header class="site-header">
     <a href="/"><h1 class="site-logo">E+Net</h1></a>
     <nav class="nav-bar">
@@ -20,10 +30,11 @@
             <div class="user-bio"><%- user.user_bio %> </div>
         </header> 
         <form action="/dashboard" method="post">
-            <textarea name="bio_content" class="form-input bio-form" spellcheck="false" autofocus placeholder="Votre bio"></textarea>
+            <textarea name="bio_content" class="form-input bio-form" spellcheck="false" autofocus placeholder="Votre bio" rows="10"></textarea>
             <button id="submit" type="submit">Mettre à jour votre Bio</button>
         </form>
     <% } %> 
 </main>
 <script src="/js/dashboard.js"></script>
-<%- include('footer') %>
+</body>
+</html>

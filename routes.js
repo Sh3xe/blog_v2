@@ -5,6 +5,33 @@ const express = require("express");
 const router = express.Router();
 const database = require("./DatabaseManager.js");
 const utils = require("./utils.js");
+const config = require("./config");
+
+const path = require("path");
+const multer = require("multer");
+
+//multer init
+const storage = multer.diskStorage({
+    destination: `${__dirname}/public/uploads`,
+    filename: (req, file, callback)=>{
+        callback(null, `${file.originalname.substring(0, 100).replace(" ", "_")}-${Date.now()}${path.extname(file.originalname)}`);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits:{fileSize: 1000000},
+    fileFilter: (req, file, callback)=>{
+        const extname = config.multer_allowed_files.test(file.originalname.toLocaleLowerCase());
+        const mimetype = config.multer_allowed_files.test(file.mimetype);
+        if(extname && mimetype) callback(null, true);
+        else{
+            callback("Erreure: le ficher doit faire 1mb MAX et être une image ou une vidéo");
+        }
+    }
+}).single("Image");
+
+//utils
 
 let views = { //will be used multiple times
     home     : __dirname +"/views/home.ejs",
@@ -17,6 +44,7 @@ let views = { //will be used multiple times
 };
 
 function loginRequired(req, res, next){
+    // redirect to /login if not logged in, create a user obj in the req esle.
     if(req.session.user_id){
         database.getUserById(req.session.user_id).then((user)=>{
             if(user.length){
@@ -32,7 +60,7 @@ function loginRequired(req, res, next){
 
 //GET
 router.get("/", (req, res) => {
-    let start = 0
+    let start = 0;
     if(req.query.start) start = parseInt(req.query.start);
 
     database.getArticles(start).then(data=>{
@@ -122,22 +150,25 @@ router.post("/login", (req, res)=>{
 });
 
 router.post("/poster", loginRequired, (req, res)=>{
-    let {title, content} = req.body;
-    content = utils.parseMessage(content);
-    let {message, failed} = utils.validatePostForm(title, content);
+    upload(req, res, (err)=>{
+        let {title, content} = req.body;
+        let {message, failed} = utils.validatePostForm(title, content);
+        content = utils.parseMessage(content);
 
-    if (!failed){
-        database.addArticle(title, content, req.session.user_id).then(m =>{
+        if(err) {failed = true; message = err;}
+        if (!failed){
+            database.addArticle(title, content, req.session.user_id, req.file.filename).then(() =>{
             message.content = "Article ajouté!";
-            res.render(views.upload, {message});
-        }).catch(m=>{
-            message = {title: "oups",content:m,color:"red"};
-            res.render(views.upload, {message});
-        });
-    } else res.render(views.upload, {message});
+                res.render(views.upload, {message});
+            }).catch(m=>{
+                message = {title: "oups",content:m,color:"red"};
+                res.render(views.upload, {message});
+            });
+        } else res.render(views.upload, {message});
+    });
 });
 
-//"DELETE" //not really delete because we can't with html
+//"DELETE" //not really delete because we can't with HTML
 router.post("/post/:post_id/delete_comment/:id", loginRequired, (req, res)=>{
     database.getCommentById(req.params.id).then(comment=>{
         if(comment[0].comment_user == req.session.user_id) database.deleteComment(comment[0].comment_id).then(()=>{
@@ -148,7 +179,7 @@ router.post("/post/:post_id/delete_comment/:id", loginRequired, (req, res)=>{
 
 router.post("/post/delete/:id", loginRequired, (req, res)=>{
     database.getArticleById(req.params.id).then(article=>{
-        if(article[0].user_id == req.session.user_id) database.deleteArticle(article[0].article_id).then(()=>{
+        if(article[0].user_id == req.session.user_id) database.deleteArticle(article[0].article_id, article[0].article_image).then(()=>{
             res.redirect("/");
         }).catch(()=> res.redirect(`/post/${req.params.id}`));
     }).catch(()=> res.redirect(`/post/${req.params.id}`));

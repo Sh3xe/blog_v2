@@ -1,4 +1,14 @@
-<%- include('header') %>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="shortcut icon" type="image/png" href="/img/favicon.png"/>
+
+    <title>ECO + NETWORKING SERVICE</title>
+</head>
+<body>
 <header class="site-header">
     <a href="/"><h1 class="site-logo">E+Net</h1></a>
     <nav class="nav-bar">
@@ -22,6 +32,9 @@
             </span>
         </header>
         <main class="article-content">
+            <% if(article.article_image){ %> 
+                <img src=<%= `/uploads/${article.article_image}` %>>
+            <% } %> 
             <%- article.article_content %>
         </main>
         <% if(user_id == article.user_id){ %> 
@@ -67,4 +80,5 @@
 <% }%>
 <script>let last=document.getElementById("last");let next=document.getElementById("next");let container=document.querySelector(".comments");const urlParams=new URLSearchParams(window.location.search);let curr_start=parseInt(urlParams.get("start"))||0;next.addEventListener("click",e=>{console.log("next");e.preventDefault();if(container.childElementCount==6){curr_start+=6;window.location.replace(`${window.location.pathname }?start=${ curr_start }`)}});last.addEventListener("click",e=>{console.log("last");e.preventDefault();if(curr_start>=6){curr_start-=6;window.location.replace(`${window.location.pathname }?start=${ curr_start }`)}});if(container.childElementCount==0){if(curr_start>=6){curr_start-=6;window.location.replace(`${window.location.pathname }?start=${ curr_start }`)}}</script>
 <!--<script src="http://localhost:8000/js/post.js"></script>-->
-<%- include('footer') %>
+</body>
+</html>

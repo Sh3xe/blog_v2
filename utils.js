@@ -12,7 +12,10 @@ function validatePostForm(title, content){
 }
 
 function escapeHtmlTag(string){
-    return string.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    //escape HTML tags
+    if (string)
+        return string.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    else return "";
 }
 
 function generateChatKey(user_name, user_id){
@@ -35,6 +38,7 @@ function generateChatKey(user_name, user_id){
 }
 
 function getKeyFromCookie(string){
+    //A simple function to parse cookie and take the "chat-key"
     for(let cookie_str of string.split(";")){
         let cookie = cookie_str.split("=");
         if(cookie[0].trim() == "chat-key"){
@@ -45,11 +49,19 @@ function getKeyFromCookie(string){
 }
 
 function parseMessage(message){
-    message = ` ${message} `; //Helps with the regExp
-    message = message.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
-    message = message.replace(/[^\/](BIG)/g, "<strong>").replace(/\/BIG/g, "</strong>");
-    message = message.replace(/[^\/](ITALIC)/g, "<i>").replace(/\/ITALIC/g, "</i>");
-    return message;
+    /*
+    * replace white spaces with "&nbsp;"
+    * escape < and >, replace \n by <br> tag
+    * makes "BIG text /BIG" <trong>
+    * makes "ITALIC text /ITALIC" <i>
+    */
+   if(message){
+       message = message.replace(/ /g, "&nbsp;");
+       message = message.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>"); // escape the / and \, replace \ by <br>
+       message = message.replace(/\/BIG/g, "</strong>").replace(/(BIG)/g, "<strong>"); //make BIG text /BIG bolg
+       message = message.replace(/\/ITALIC/g, "</i>").replace(/(ITALIC)/g, "<i>"); // MAKE ITALIC text /ITALIC italic
+       return message;
+   }
 }
 
 module.exports = {
