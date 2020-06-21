@@ -59,13 +59,9 @@ class ChatApp {
 
     
     findUser(key) {
-        const users = JSON.parse(fs.readFileSync("chat_pending.json"));
-        for(let user of users){
-            if(user.key == key){
-                return {name:user.name, id:user.id};
-            }
-        }
-        return false;
+        const user = JSON.parse(fs.readFileSync("chat_pending.json"));
+        if(user.key == key) return {name:user.name, id:user.id};
+        else return false;
     }
 
     updateMessageList(msg) {

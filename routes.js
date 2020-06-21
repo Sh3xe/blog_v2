@@ -14,7 +14,7 @@ const multer = require("multer");
 const storage = multer.diskStorage({
     destination: `${__dirname}/public/uploads`,
     filename: (req, file, callback)=>{
-        callback(null, `${file.originalname.substring(0, 100).replace(" ", "_")}-${Date.now()}${path.extname(file.originalname)}`);
+        callback(null, `${Date.now()}-${file.originalname.substring(0, 100).replace(" ", "_")}`);
     }
 });
 
@@ -26,7 +26,7 @@ const upload = multer({
         const mimetype = config.multer_allowed_files.test(file.mimetype);
         if(extname && mimetype) callback(null, true);
         else{
-            callback("Erreure: le ficher doit faire 1mb MAX et être une image ou une vidéo");
+            callback("Erreur: le ficher doit faire 1mb MAX et être une image ou une vidéo");
         }
     }
 }).single("Image");
@@ -87,7 +87,7 @@ router.get("/poster", loginRequired, (req, res) => {
 
 router.get("/chat", loginRequired, (req, res)=>{
     let chat_key = utils.generateChatKey(req.user.user_name, req.session.user_id);
-    res.cookie("chat-key", chat_key);
+    res.cookie("chat-key", chat_key, {'sameSite': "strict"});
     res.render(views.chat);
 });
 
@@ -101,6 +101,7 @@ router.get("/post/:id", (req, res) => {
             article[0].comments = [];
             database.getArticleComments(req.params.id, start).then(comments =>{
                 article[0].comments = comments;
+                article[0].article_image = utils.getHtmlFileTag(article[0].article_image);
                 res.render(views.post, {article: article[0], error: false, user_id: req.session.user_id});
             }).catch(() => res.render(views.post, {article: article[0], error: false, user_id: req.session.user_id}));
         } else res.render(views.post, {error: "Aucun article trouvé"});
@@ -121,10 +122,12 @@ router.get("/user/:id", (req, res)=>{
 
 //POST
 router.post("/post/:id", loginRequired, (req, res)=>{
-    let content = utils.parseMessage(req.body.content);
-    database.addComment(req.session.user_id, req.params.id,content).then(() =>{
-        res.redirect("/post/" + req.params.id);
-    }).catch(() => res.redirect(views.login));
+    if(req.body.content){
+        let content = utils.parseMessage(req.body.content.substring(0, 250));
+        database.addComment(req.session.user_id, req.params.id, content).then(() =>{
+            res.redirect("/post/" + req.params.id);
+        }).catch(() => res.redirect(views.login));
+    } else res.redirect("/post/" + req.params.id);
 });
 
 router.post("/dashboard", loginRequired, (req, res)=>{
@@ -153,18 +156,21 @@ router.post("/poster", loginRequired, (req, res)=>{
     upload(req, res, (err)=>{
         let {title, content} = req.body;
         let {message, failed} = utils.validatePostForm(title, content);
+        let file_name = "";
         content = utils.parseMessage(content);
 
+        if(req.file) file_name = req.file.filename;
         if(err) {failed = true; message = err;}
+
         if (!failed){
-            database.addArticle(title, content, req.session.user_id, req.file.filename).then(() =>{
+            database.addArticle(title, content, req.session.user_id, file_name).then(() =>{
             message.content = "Article ajouté!";
                 res.render(views.upload, {message});
             }).catch(m=>{
                 message = {title: "oups",content:m,color:"red"};
                 res.render(views.upload, {message});
             });
-        } else res.render(views.upload, {message});
+        } else res.render(views.upload, {message:{title: "oups",content:err,color:"red"}});
     });
 });
 

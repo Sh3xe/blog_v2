@@ -6,11 +6,11 @@
     <link rel="stylesheet" href="/css/style.css">
     <link rel="shortcut icon" type="image/png" href="/img/favicon.png"/>
 
-    <title>ECO + NETWORKING SERVICE</title>
+    <title>ENS - Post</title>
 </head>
 <body>
 <header class="site-header">
-    <a href="/"><h1 class="site-logo">E+Net</h1></a>
+    <a href="/"><h1 class="site-logo">E+.Net</h1></a>
     <nav class="nav-bar">
         <span>
             <a href="/" id="selected">Accueil</a>
@@ -28,12 +28,12 @@
         <article>
         <header class="article-header">
             <h1 class="article-title"><%= article.article_title %> </h1>
-            <span class="article-info">Par <a  href=<%= "/user/" + article.user_id %> class="username"><%= article.user_name %></a> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>, <%= article.article_views %> vue(s).
+            <span class="article-info">Par <a  href=<%= "/user/" + article.user_id %> class="username"><%= article.user_name %></a> le <span class="date"><%=` ${d.getDate()}/${d.getMonth()}/${d.getFullYear()}, à ${d.getHours()}h${d.getMinutes()}`%>, <%= article.article_views %> visite(s).
             </span>
         </header>
         <main class="article-content">
             <% if(article.article_image){ %> 
-                <img src=<%= `/uploads/${article.article_image}` %>>
+                <%- article.article_image %> 
             <% } %> 
             <%- article.article_content %>
         </main>

@@ -24,6 +24,7 @@ app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
 app.use(sessions({ // cookie init
     cookieName: "session",
+    sameSite: "strict",
     secret: config.secret_key,
     duration: 10 * 60 * 1000,
     ephemeral: true
